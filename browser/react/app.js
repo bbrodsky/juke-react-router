@@ -10,6 +10,8 @@ import AppContainer from './containers/AppContainer';
 import Albums from './containers/AlbumsContainer';
 import Artists from './containers/ArtistsContainer';
 import Album from './containers/AlbumContainer';
+import Artist from './containers/ArtistContainer';
+
 
 
 
@@ -19,7 +21,8 @@ ReactDOM.render(
     	<Route path='/' component={AppContainer}>
 	    	<Route path='/albums' component={Albums} />
 	    	<Route path='/artists' component={Artists} />
-        <Route path='/albums/:albumId' component={Album} />
+        	<Route path='/albums/:albumId' component={Album} />
+        	<Route path='/artists/:artistId' component={Artist} />
 	    	<IndexRoute component={Albums} />
     	</Route>
 	  </Router>

@@ -78,8 +78,13 @@
 	
 	var _AlbumContainer2 = _interopRequireDefault(_AlbumContainer);
 	
+	var _ArtistContainer = __webpack_require__(294);
+	
+	var _ArtistContainer2 = _interopRequireDefault(_ArtistContainer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	//import Routes from './components/Routes';
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: _store2.default },
@@ -92,11 +97,11 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: '/albums', component: _AlbumsContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/artists', component: _ArtistsContainer2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/albums/:albumId', component: _AlbumContainer2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/artists/:artistId', component: _ArtistContainer2.default }),
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _AlbumsContainer2.default })
 	    )
 	  )
 	), document.getElementById('app'));
-	//import Routes from './components/Routes';
 
 /***/ },
 /* 1 */
@@ -30722,6 +30727,8 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactRouter = __webpack_require__(216);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = function (_ref) {
@@ -30743,10 +30750,9 @@
 	          'div',
 	          { className: 'list-group-item', key: artist.id },
 	          _react2.default.createElement(
-	            'a',
-	            { href: '#', onClick: function onClick() {
-	                return go(artist);
-	              } },
+	            _reactRouter.IndexLink,
+	            { to: '/artists/' + artist.id },
+	            ' ',
 	            artist.name
 	          )
 	        );
@@ -30764,7 +30770,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetchAndGoToArtist = exports.receiveArtist = exports.receiveArtists = undefined;
+	exports.fetchArtist = exports.fetchAndGoToArtist = exports.receiveArtist = exports.receiveArtists = undefined;
 	
 	var _constants = __webpack_require__(190);
 	
@@ -30804,6 +30810,22 @@
 	    });
 	  };
 	};
+	
+	var fetchArtist = exports.fetchArtist = function fetchArtist(id) {
+	  return function (dispatch) {
+	    var artistId = '/api/artists/' + id,
+	        songs = artistId + '/songs',
+	        albums = artistId + '/albums';
+	
+	    Promise.all([fetch(artistId), fetch(songs), fetch(albums)]).then(function (responses) {
+	      return Promise.all(responses.map(function (res) {
+	        return res.json();
+	      }));
+	    }).then(function (results) {
+	      dispatch(receiveArtist.apply(undefined, _toConsumableArray(results)));
+	    });
+	  };
+	};
 
 /***/ },
 /* 294 */
@@ -30821,7 +30843,7 @@
 	
 	var _Artist2 = _interopRequireDefault(_Artist);
 	
-	var _albums = __webpack_require__(284);
+	var _artists = __webpack_require__(293);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -30834,8 +30856,8 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    go: function go(album) {
-	      return dispatch((0, _albums.fetchAndGoToAlbum)(album));
+	    fetch: function fetch(id) {
+	      return dispatch((0, _artists.fetchArtist)(id));
 	    }
 	  };
 	};
@@ -30852,9 +30874,13 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(216);
 	
 	var _SongsContainer = __webpack_require__(287);
 	
@@ -30862,61 +30888,90 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	exports.default = function (_ref) {
-	  var selectedArtist = _ref.selectedArtist;
-	  var go = _ref.go;
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      selectedArtist.name
-	    ),
-	    _react2.default.createElement(
-	      'h3',
-	      null,
-	      'Albums'
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      { className: 'row' },
-	      selectedArtist.albums.map(function (album) {
-	        return _react2.default.createElement(
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Artist = function (_React$Component) {
+	  _inherits(Artist, _React$Component);
+	
+	  function Artist() {
+	    _classCallCheck(this, Artist);
+	
+	    return _possibleConstructorReturn(this, (Artist.__proto__ || Object.getPrototypeOf(Artist)).apply(this, arguments));
+	  }
+	
+	  _createClass(Artist, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.props.fetch(this.props.params.artistId);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var selectedArtist = this.props.selectedArtist;
+	      //console.log(this.props);
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          selectedArtist.name
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Albums'
+	        ),
+	        _react2.default.createElement(
 	          'div',
-	          { className: 'col-xs-4', key: album.id },
-	          _react2.default.createElement(
-	            'a',
-	            { className: 'thumbnail', href: '#', onClick: function onClick() {
-	                return go(album);
-	              } },
-	            _react2.default.createElement('img', { src: album.imageUrl }),
-	            _react2.default.createElement(
+	          { className: 'row' },
+	          selectedArtist.albums && selectedArtist.albums.map(function (album) {
+	            return _react2.default.createElement(
 	              'div',
-	              { className: 'caption' },
+	              { className: 'col-xs-4', key: album.id },
 	              _react2.default.createElement(
-	                'h5',
-	                null,
+	                _reactRouter.IndexLink,
+	                { className: 'thumbnail', to: '/albums/' + album.id },
+	                ' ',
+	                album.name,
+	                _react2.default.createElement('img', { src: album.imageUrl }),
 	                _react2.default.createElement(
-	                  'span',
-	                  null,
-	                  album.name
+	                  'div',
+	                  { className: 'caption' },
+	                  _react2.default.createElement(
+	                    'h5',
+	                    null,
+	                    _react2.default.createElement(
+	                      'span',
+	                      null,
+	                      album.name
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'small',
+	                    null,
+	                    album.songs.length,
+	                    ' songs'
+	                  )
 	                )
-	              ),
-	              _react2.default.createElement(
-	                'small',
-	                null,
-	                album.songs.length,
-	                ' songs'
 	              )
-	            )
-	          )
-	        );
-	      })
-	    ),
-	    _react2.default.createElement(_SongsContainer2.default, { songs: selectedArtist.songs })
-	  );
-	};
+	            );
+	          })
+	        ),
+	        _react2.default.createElement(_SongsContainer2.default, { songs: selectedArtist.songs })
+	      );
+	    }
+	  }]);
+	
+	  return Artist;
+	}(_react2.default.Component);
+	
+	exports.default = Artist;
 
 /***/ },
 /* 296 */

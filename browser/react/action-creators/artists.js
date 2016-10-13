@@ -29,3 +29,24 @@ export const fetchAndGoToArtist = artist =>
         dispatch(switchLocation('artist'));
       });
   };
+
+  export const fetchArtist = id =>
+  dispatch => {
+    let artistId = `/api/artists/${id}`,
+        songs = `${artistId}/songs`,
+        albums = `${artistId}/albums`;
+
+    Promise
+      .all([fetch(artistId), fetch(songs), fetch(albums)])
+      .then(responses => Promise.all(responses.map(res => res.json())))
+      .then(results => {
+        dispatch(receiveArtist(...results));
+      });
+  };
+
+
+
+
+
+
+
