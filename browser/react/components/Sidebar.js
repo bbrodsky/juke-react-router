@@ -1,18 +1,21 @@
 'use strict';
 
 import React from 'react';
+import { IndexLink } from 'react-router';
 
-export default ({ go, location }) => (
+export default ({  }) => (
   <sidebar>
     <img src="juke.svg" className="logo" />
     <section>
-      <h4 className={location.match('album') ? 'menu-item active' : 'menu-item'}>
-        <a href="#" onClick={() => go('albums')}>ALBUMS</a>
+      {/* <h4 activeClassName={location.match('albums') ? 'menu-item active' : 'menu-item'}> */}
+      <h4>
+        <IndexLink to="/albums">ALBUMS</IndexLink>
       </h4>
     </section>
     <section>
-      <h4 className={location.match('artist') ? 'menu-item active' : 'menu-item'}>
-        <a href="#" onClick={() => go('artists')}>ARTISTS</a>
+      {/* <h4 activeClassName={location.match('artist') ? 'menu-item active' : 'menu-item'}> */}
+      <h4>
+        <IndexLink to="/artists">ARTISTS</IndexLink>
       </h4>
     </section>
   </sidebar>

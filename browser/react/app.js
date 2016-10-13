@@ -9,6 +9,7 @@ import AppContainer from './containers/AppContainer';
 //import Routes from './components/Routes';
 import Albums from './containers/AlbumsContainer';
 import Artists from './containers/ArtistsContainer';
+import Album from './containers/AlbumContainer';
 
 
 
@@ -18,10 +19,10 @@ ReactDOM.render(
     	<Route path='/' component={AppContainer}>
 	    	<Route path='/albums' component={Albums} />
 	    	<Route path='/artists' component={Artists} />
+        <Route path='/albums/:albumId' component={Album} />
 	    	<IndexRoute component={Albums} />
     	</Route>
-
-	</Router>
+	  </Router>
   </Provider>,
   document.getElementById('app')
 );

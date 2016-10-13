@@ -8,11 +8,12 @@ const mapStateToProps = ({ location }) => ({
   location
 });
 
-const mapDispatchToProps = dispatch => ({
-  go: loc => dispatch(switchLocation(loc))
-});
+// const mapDispatchToProps = dispatch => ({
+//   go: loc => dispatch(switchLocation(loc))
+// });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
+  // ,
+  // mapDispatchToProps
 )(Sidebar);
